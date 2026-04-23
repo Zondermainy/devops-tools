@@ -25,31 +25,31 @@ deckhouse контролер пошёл в api клауда заказывать
 ## Cloud Permanent:
 1. Подготовка окружения
 Запуск контейнера с утилитой dhctl нужной версии. Монтирование SSH-ключей для доступа к мастер-ноде.
-
+```yaml
 docker run --pull=always -it \
   -v "$HOME/.ssh/:/tmp/.ssh/" \
   registry.deckhouse.ru/deckhouse/ee/install:v1.74.15 \
   bash
-
+```
 2. Проверка подключения (Connectivity Check)
 Проверка доступности мастера кластера и корректности SSH-ключей перед внесением изменений.
-
+```yaml
 dhctl terraform check \
   --ssh-host 111.88.253.61 \
   --ssh-agent-private-keys /tmp/.ssh/education_id_rsa \
   --ssh-user ubuntu
-
+```
 3. Редактирование конфигурации провайдера
 Открытие редактора для изменения конфигурации кластера (provider-cluster-configuration). Здесь описываются параметры инфраструктуры (ноды, сети, диски).
-
+```yaml
 dhctl config edit provider-cluster-configuration \
   --ssh-host 111.88.253.61 \
   --ssh-agent-private-keys /tmp/.ssh/education_id_rsa \
   --ssh-user ubuntu
-
+```
 Ключевой блок конфигурации (YAML):
 Добавление или изменение группы узлов frontend.
-
+```yaml
 nodeGroups:
   - name: frontend           # Имя группы узлов
     replicas: 2              # Количество нод
@@ -64,11 +64,13 @@ nodeGroups:
       externalIPAddresses:   # Настройка внешних IP
         - Auto               # Автоматическое назначение публичного IP
         - "103.76.53.124"    # Или статический IP (если требуется)
-
+```
 4. Применение изменений (Converge)
 Запуск процесса применения конфигурации. Deckhouse сравнит желаемое состояние (из YAML) с текущим и создаст/обновит ресурсы в облаке.
 
+```yaml
 dhctl converge \
   --ssh-host 111.88.253.61 \
   --ssh-agent-private-keys /tmp/.ssh/education_id_rsa \
   --ssh-user ubuntu
+  ```
