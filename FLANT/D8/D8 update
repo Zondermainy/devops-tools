@@ -1,0 +1,6 @@
+1) https://releases.deckhouse.ru/
+2) Подробная информация о релизе:
+```yaml
+kubectl get deckhousereleases.deckhouse.io <version> -oyaml
+```
+3) /system/management/deckhouse/updates/settings - настройки обновления
